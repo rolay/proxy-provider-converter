@@ -116,13 +116,12 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(proxies.join("\n"));
   } else {
-    const response = YAML.stringify({ proxies: config.proxies });
     if (iscdn !== undefined) {
-      console.log(response);
-      // response.proxies.forEach(obj => {
-      //   obj.server = '162.159.17.146';
-      // });
+      config.proxies.forEach(obj => {
+        obj.server = '162.159.17.146';
+      });
     }
+    const response = YAML.stringify({ proxies: config.proxies });
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(response);
   }
