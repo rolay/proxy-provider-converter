@@ -4,8 +4,7 @@ const axios = require("axios");
 module.exports = async (req, res) => {
   const url = req.query.url;
   const target = req.query.target;
-  const iscdn = req.query.cdn;
-  const cdnip = req.query.cdnip;
+  const cdn = req.query.cdn;
   console.log(`query: ${JSON.stringify(req.query)}`);
   if (url === undefined) {
     res.status(400).send("Missing parameter: url");
@@ -117,13 +116,9 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(proxies.join("\n"));
   } else {
-    if (iscdn !== undefined) {
-      if (cdnip === undefined) {
-        res.status(400).send("No cdnip in url");
-        return;
-      }
+    if (cdn !== undefined) {
       config.proxies.forEach(obj => {
-        obj.server = cdnip;
+        obj.server = cdn;
       });
     }
     const response = YAML.stringify({ proxies: config.proxies });
