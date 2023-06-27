@@ -5,6 +5,7 @@ module.exports = async (req, res) => {
   const url = req.query.url;
   const target = req.query.target;
   const iscdn = req.query.cdn;
+  const cdnip = req.query.cdnip;
   console.log(`query: ${JSON.stringify(req.query)}`);
   if (url === undefined) {
     res.status(400).send("Missing parameter: url");
@@ -117,8 +118,12 @@ module.exports = async (req, res) => {
     res.status(200).send(proxies.join("\n"));
   } else {
     if (iscdn !== undefined) {
+      if (cdnip === undefined) {
+        res.status(400).send("No cdnip in url");
+        return;
+      }
       config.proxies.forEach(obj => {
-        obj.server = '162.159.17.146';
+        obj.server = cdnip;
       });
     }
     const response = YAML.stringify({ proxies: config.proxies });
