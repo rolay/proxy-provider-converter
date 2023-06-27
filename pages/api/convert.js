@@ -118,10 +118,12 @@ module.exports = async (req, res) => {
   } else {
     const response = YAML.stringify({ proxies: config.proxies });
     if (iscdn !== undefined) {
+      console.log(response);
       response.proxies.forEach(obj => {
         obj.server = '162.159.17.146';
       });
     }
+    console.log(response);
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(response);
   }
