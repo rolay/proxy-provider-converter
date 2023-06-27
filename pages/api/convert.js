@@ -117,7 +117,7 @@ module.exports = async (req, res) => {
     res.status(200).send(proxies.join("\n"));
   } else {
     const response = YAML.stringify({ proxies: config.proxies });
-    if (cdn !== undefined) {
+    if (iscdn !== undefined) {
       response.forEach(obj => {
         obj.server = '162.159.17.146';
       });
