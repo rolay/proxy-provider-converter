@@ -116,11 +116,12 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(proxies.join("\n"));
   } else {
-    if (cdn !== undefined) {
-      config.proxies.forEach(obj => {
+    config.proxies.forEach(obj => {
+      obj.udp = obj.udp || true;
+      if (cdn !== undefined) {
         obj.server = cdn;
-      });
-    }
+      }
+    });
     const response = YAML.stringify({ proxies: config.proxies });
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(response);
