@@ -117,7 +117,6 @@ module.exports = async (req, res) => {
     res.status(200).send(proxies.join("\n"));
   } else {
     config.proxies.forEach(obj => {
-      obj.udp = obj.udp || true;
       if (cdn !== undefined) {
         obj.server = cdn;
       }
