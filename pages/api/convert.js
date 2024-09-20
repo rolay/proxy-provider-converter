@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
       url,
       headers: {
         "User-Agent":
-          "clash-verge/v1.3.8",
+          "clash-verge/v1.7.7",
       },
     });
     configFile = result.data;
@@ -116,11 +116,23 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(proxies.join("\n"));
   } else {
+    const seenNames = new Set();
+    
+    // 过滤出第一个出现的相同name的对象
+    config.proxies = config.proxies.filter(obj => {
+      if (!seenNames.has(obj.name)) {
+        seenNames.add(obj.name);
+        return true;
+      }
+      return false;
+    });
+    
     config.proxies.forEach(obj => {
       if (cdn !== undefined) {
         obj.server = cdn;
       }
     });
+    
     const response = YAML.stringify({ proxies: config.proxies });
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.status(200).send(response);
