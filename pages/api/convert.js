@@ -117,21 +117,17 @@ module.exports = async (req, res) => {
     res.status(200).send(proxies.join("\n"));
   } else {
     const seenNames = new Set();
-    
-    // 过滤出第一个出现的相同name的对象
-    config.proxies = config.proxies.filter(obj => {
+    config.proxies = config.proxies.reduce((result, obj) => {
       if (!seenNames.has(obj.name)) {
         seenNames.add(obj.name);
-        return true;
+        // 如果cdn已定义，更新server地址
+        if (cdn !== undefined) {
+          obj.server = cdn;
+        }
+        result.push(obj); // 保留这个对象
       }
-      return false;
-    });
-    
-    config.proxies.forEach(obj => {
-      if (cdn !== undefined) {
-        obj.server = cdn;
-      }
-    });
+      return result;
+    }, []);
     
     const response = YAML.stringify({ proxies: config.proxies });
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
